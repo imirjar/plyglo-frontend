@@ -1,0 +1,34 @@
+{
+    email azadorov1234@gmail.com
+    admin off
+}
+
+plyglo.com {
+    tls azadorov1234@gmail.com
+    root * /usr/share/caddy/website
+    file_server
+    encode gzip
+    try_files {path} /index.html
+    
+    header {
+        -Server
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+    }
+}
+
+study.plyglo.com {
+    tls azadorov1234@gmail.com
+    root * /usr/share/caddy/app
+    file_server
+    encode gzip
+    try_files {path} /index.html
+    
+    header {
+        -Server
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+    }
+}
