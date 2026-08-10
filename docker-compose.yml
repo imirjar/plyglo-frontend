@@ -20,11 +20,14 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - plyglo-website:/usr/share/caddy/website:ro
       - plyglo-app:/usr/share/caddy/app:ro
+    env_file:
+      - .env
     depends_on:
       site:
         condition: service_completed_successfully
       app:
         condition: service_completed_successfully
+    
 
 volumes:
   plyglo-website:

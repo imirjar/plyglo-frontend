@@ -32,3 +32,11 @@ study.plyglo.com {
         X-XSS-Protection "1; mode=block"
     }
 }
+
+api.plyglo.com {
+    reverse_proxy {$API_BASE_URL}
+}
+
+auth.plyglo.com {
+    reverse_proxy {$AUTH_BASE_URL}
+}
