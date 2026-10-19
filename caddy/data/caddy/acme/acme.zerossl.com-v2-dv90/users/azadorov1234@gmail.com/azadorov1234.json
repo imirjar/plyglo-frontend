@@ -1,0 +1,14 @@
+{
+	"status": "valid",
+	"contact": [
+		"mailto:azadorov1234@gmail.com"
+	],
+	"termsOfServiceAgreed": true,
+	"externalAccountBinding": {
+		"protected": "eyJhbGciOiJIUzI1NiIsImtpZCI6InhCMWNKME5EdnlEYS11U3FwVEpDTGciLCJ1cmwiOiJodHRwczovL2FjbWUuemVyb3NzbC5jb20vdjIvRFY5MC9uZXdBY2NvdW50In0",
+		"payload": "eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVDIiwieCI6IjRKVU9HUHgxQWtxOG95UjJXTUNQR0x0RDBzbjYyaEpoeHNTcEtERG5ZYUEiLCJ5IjoiXzdpV19tNHp6S2x2ZUVFUXprVW9PaTVTaHUxclM0Z1NWRkItRy1Wa1UtdyJ9",
+		"signature": "poGHQel0hy33oWdhyrVzByoWVk3IYUrBKvhgqdFuUg4"
+	},
+	"orders": "https://acme.zerossl.com/v2/DV90/account/xB1cJ0NDvyDa-uSqpTJCLg/orders",
+	"location": "https://acme.zerossl.com/v2/DV90/account/xB1cJ0NDvyDa-uSqpTJCLg"
+}

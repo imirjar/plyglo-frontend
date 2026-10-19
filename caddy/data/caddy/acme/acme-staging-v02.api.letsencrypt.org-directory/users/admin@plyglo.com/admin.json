@@ -1,0 +1,8 @@
+{
+	"status": "valid",
+	"contact": [
+		"mailto:admin@plyglo.com"
+	],
+	"termsOfServiceAgreed": true,
+	"location": "https://acme-staging-v02.api.letsencrypt.org/acme/acct/355582013"
+}

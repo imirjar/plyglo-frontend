@@ -1,34 +1,81 @@
-version: '3.8'
-
 services:
-  site:
-    image: ghcr.io/imirjar/plyglo-website:latest
-    volumes:
-      - plyglo-website:/app/dist
-
-  app:
-    image: ghcr.io/imirjar/plyglo-study:latest
-    volumes:
-      - plyglo-app:/app/build/web
-
   caddy:
     image: caddy:2-alpine
+    container_name: caddy
     ports:
       - "80:80"
       - "443:443"
+      - "443:443/udp"   # HTTP/3
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - plyglo-website:/usr/share/caddy/website:ro
-      - plyglo-app:/usr/share/caddy/app:ro
-    env_file:
-      - .env
-    depends_on:
-      site:
-        condition: service_completed_successfully
-      app:
-        condition: service_completed_successfully
-    
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+    environment:
+      TZ: ${TZ}
+    networks:
+      - edge
+    restart: unless-stopped
 
-volumes:
-  plyglo-website:
-  plyglo-app:
+  site:
+    image: ghcr.io/imirjar/plyglo-website:v0.5.4
+    container_name: site
+    environment:
+      TZ: ${TZ}
+      HOST: 0.0.0.0
+      PORT: 3000
+      NUXT_OIDC_ISSUER: https://auth.plyglo.com/application/o/plyglo-api/
+      NUXT_REDIS_URL: redis://redis.internal.lan:6379
+      # ... остальные env (session secret, encryption key)
+    networks:
+      - edge
+      - internal
+    restart: unless-stopped
+
+  app:
+    image: ghcr.io/imirjar/plyglo-expo:latest
+    container_name: app
+    platform: linux/amd64
+    environment:
+      TZ: ${TZ}
+      PORT: 3000
+    networks:
+      - edge
+      - internal
+    restart: unless-stopped
+
+  # node-exporter:
+  #   image: prom/node-exporter:latest
+  #   container_name: node-exporter
+  #   network_mode: host
+  #   pid: host
+  #   restart: unless-stopped
+
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor:latest
+  #   container_name: cadvisor
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:ro
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #   networks:
+  #     - internal
+  #   restart: unless-stopped
+
+  # promtail:
+  #   image: grafana/promtail:latest
+  #   container_name: promtail
+  #   volumes:
+  #     - ./agents/promtail-config.yml:/etc/promtail/config.yml:ro
+  #     - /var/log:/var/log:ro
+  #     - /var/lib/docker/containers:/var/lib/docker/containers:ro
+  #   networks:
+  #     - internal
+  #   restart: unless-stopped
+
+networks:
+  edge:
+    driver: bridge
+  internal:
+    driver: bridge
+    internal: true

@@ -1,42 +1,55 @@
 {
-    email azadorov1234@gmail.com
-    admin off
+    email admin@plyglo.com
 }
 
+# Общие security headers для всех сайтов
+(security_headers) {
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}
+
+# ── Основной сайт (Nuxt SSR) ─────────────────────────────
 plyglo.com {
-    tls azadorov1234@gmail.com
-    root * /usr/share/caddy/website
-    file_server
-    encode gzip
-    try_files {path} /index.html
-    
-    header {
-        -Server
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        X-XSS-Protection "1; mode=block"
-    }
+    import security_headers
+    encode gzip zstd
+    reverse_proxy site:3000
 }
 
-study.plyglo.com {
-    tls azadorov1234@gmail.com
-    root * /usr/share/caddy/app
-    file_server
-    encode gzip
-    try_files {path} /index.html
-    
-    header {
-        -Server
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        X-XSS-Protection "1; mode=block"
-    }
-}
-
+# ── API / BFF (тот же Nuxt-контейнер) ────────────────────
 api.plyglo.com {
-    reverse_proxy {$API_BASE_URL}
+    import security_headers
+    encode gzip zstd
+    reverse_proxy site:3000
 }
 
+# ── Приложение для обучения (Expo) ────────────────────────
+app.plyglo.com {
+    import security_headers
+    encode gzip zstd
+    reverse_proxy app:3000
+}
+
+# ── Authentik IdP ────────────────────────────────────────
 auth.plyglo.com {
-    reverse_proxy {$AUTH_BASE_URL}
+    import security_headers
+    encode gzip zstd
+
+    # Блокировка /-/metrics/ — публично не должно быть доступно
+    @metrics path /-/metrics/*
+    respond @metrics 404
+
+    # rate_limit — требует плагина caddy-ratelimit (см. ниже)
+    # rate_limit {
+    #     zone auth_zone {
+    #         key {remote_host}
+    #         events 10
+    #         window 1s
+    #     }
+    # }
+
+    reverse_proxy http://authentik.internal.lan:9000
 }

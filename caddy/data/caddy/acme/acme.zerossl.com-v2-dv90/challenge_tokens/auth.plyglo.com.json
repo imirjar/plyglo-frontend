@@ -1,0 +1,1 @@
+{"type":"http-01","url":"https://acme.zerossl.com/v2/DV90/chall/TOITkeU0_YMcrQ8GcLII2Q","status":"processing","token":"dT6iHkWnIaqtuEWu_0g1ADY-VNOwhIxlN7Ls1i3A31I","keyAuthorization":"dT6iHkWnIaqtuEWu_0g1ADY-VNOwhIxlN7Ls1i3A31I.wn1TTyjCxBpNFemF5rNqcokbntC-PMwh44YX8eV8G7M","identifier":{"type":"dns","value":"auth.plyglo.com"}}
