@@ -23,13 +23,13 @@ plyglo.com {
 api.plyglo.com {
     import security_headers
     encode gzip zstd
-    @api not path /health
-    rewrite @api /api{uri}
+    # Добавляем префикс /api к пути запроса
+    uri string_prefix /api
     reverse_proxy site:3000
 }
 
 # ── Приложение для обучения (Expo) ────────────────────────
-app.plyglo.com {
+study.plyglo.com {
     import security_headers
     encode gzip zstd
     reverse_proxy app:3000
