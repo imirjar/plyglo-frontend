@@ -23,6 +23,8 @@ plyglo.com {
 api.plyglo.com {
     import security_headers
     encode gzip zstd
+    @api not path /health
+    rewrite @api /api{uri}
     reverse_proxy site:3000
 }
 
