@@ -12,6 +12,7 @@ services:
       - ./caddy/config:/config
     environment:
       TZ: ${TZ}
+      API_UPSTREAM: ${API_UPSTREAM}
     networks:
       - edge
     restart: unless-stopped
@@ -43,35 +44,37 @@ services:
       - internal
     restart: unless-stopped
 
-  # node-exporter:
-  #   image: prom/node-exporter:latest
-  #   container_name: node-exporter
-  #   network_mode: host
-  #   pid: host
-  #   restart: unless-stopped
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    network_mode: host
+    pid: host
+    restart: unless-stopped
 
-  # cadvisor:
-  #   image: gcr.io/cadvisor/cadvisor:latest
-  #   container_name: cadvisor
-  #   volumes:
-  #     - /:/rootfs:ro
-  #     - /var/run:/var/run:ro
-  #     - /sys:/sys:ro
-  #     - /var/lib/docker/:/var/lib/docker:ro
-  #   networks:
-  #     - internal
-  #   restart: unless-stopped
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "10.10.1.10:8080:8080"   # только vmbr1, не наружу
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - edge    # ← было internal
+    restart: unless-stopped
 
-  # promtail:
-  #   image: grafana/promtail:latest
-  #   container_name: promtail
-  #   volumes:
-  #     - ./agents/promtail-config.yml:/etc/promtail/config.yml:ro
-  #     - /var/log:/var/log:ro
-  #     - /var/lib/docker/containers:/var/lib/docker/containers:ro
-  #   networks:
-  #     - internal
-  #   restart: unless-stopped
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - ./agents/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    networks:
+      - edge
+    restart: unless-stopped
 
 networks:
   edge:

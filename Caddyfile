@@ -19,12 +19,9 @@ plyglo.com {
     reverse_proxy site:3000
 }
 
-# ── API / BFF (тот же Nuxt-контейнер) ────────────────────
 api.plyglo.com {
     import security_headers
     encode gzip zstd
-    # Добавляем префикс /api к пути запроса
-    uri string_prefix /api
     reverse_proxy site:3000
 }
 
