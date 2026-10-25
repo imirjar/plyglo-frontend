@@ -22,7 +22,7 @@ plyglo.com {
 api.plyglo.com {
     import security_headers
     encode gzip zstd
-    reverse_proxy site:3000
+    reverse_proxy {$API_UPSTREAM}
 }
 
 # ── Приложение для обучения (Expo) ────────────────────────
