@@ -19,10 +19,30 @@ plyglo.com {
     reverse_proxy site:3000
 }
 
+# api.plyglo.com {
+#     import security_headers
+#     encode gzip zstd
+#     reverse_proxy {$API_UPSTREAM}
+# }
 api.plyglo.com {
     import security_headers
     encode gzip zstd
-    reverse_proxy {$API_UPSTREAM}
+
+    # ─── Иммутабельные версии ─────────────────────────────────
+    handle_path /v1/* {
+        reverse_proxy {$API_V1_UPSTREAM}
+    }
+
+    handle_path /v2/* {
+        reverse_proxy {$API_V2_UPSTREAM}
+    }
+
+    # ─── Latest alias ─────────────────────────────────────────
+    # Всё, что пришло без префикса версии, идёт на текущую актуальную версию.
+    # Промоушен = поменять API_LATEST_UPSTREAM в окружении + reload.
+    handle {
+        reverse_proxy {$API_UPSTREAM}
+    }
 }
 
 # ── Приложение для обучения (Expo) ────────────────────────
