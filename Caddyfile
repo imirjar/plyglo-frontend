@@ -52,18 +52,12 @@ auth.plyglo.com {
     import security_headers
     encode gzip zstd
 
-    # Блокировка /-/metrics/ — публично не должно быть доступно
     @metrics path /-/metrics/*
     respond @metrics 404
 
-    # rate_limit — требует плагина caddy-ratelimit (см. ниже)
-    # rate_limit {
-    #     zone auth_zone {
-    #         key {remote_host}
-    #         events 10
-    #         window 1s
-    #     }
-    # }
-
-    reverse_proxy {$AUTH_UPSTREAM}
+    reverse_proxy {$AUTH_UPSTREAM} {
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Forwarded-Host {host}
+        # X-Forwarded-For Caddy добавляет автоматически
+    }
 }
