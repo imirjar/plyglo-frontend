@@ -13,6 +13,9 @@ services:
     environment:
       TZ: ${TZ}
       API_UPSTREAM: ${API_UPSTREAM}
+      API_V1_UPSTREAM: ${API_V1_UPSTREAM}
+      API_V2_UPSTREAM: ${API_V2_UPSTREAM}
+      AUTH_UPSTREAM: ${AUTH_UPSTREAM}
     networks:
       - edge
     restart: unless-stopped
