@@ -19,11 +19,13 @@ plyglo.com {
     reverse_proxy site:3000
 }
 
-# api.plyglo.com {
-#     import security_headers
-#     encode gzip zstd
-#     reverse_proxy {$API_UPSTREAM}
-# }
+# ── Приложение для обучения (Expo) ────────────────────────
+study.plyglo.com {
+    import security_headers
+    encode gzip zstd
+    reverse_proxy app:3000
+}
+
 api.plyglo.com {
     import security_headers
     encode gzip zstd
@@ -45,13 +47,6 @@ api.plyglo.com {
     }
 }
 
-# ── Приложение для обучения (Expo) ────────────────────────
-study.plyglo.com {
-    import security_headers
-    encode gzip zstd
-    reverse_proxy app:3000
-}
-
 # ── Authentik IdP ────────────────────────────────────────
 auth.plyglo.com {
     import security_headers
@@ -70,5 +65,5 @@ auth.plyglo.com {
     #     }
     # }
 
-    reverse_proxy http://authentik.internal.lan:9000
+    reverse_proxy {$AUTH_UPSTREAM}
 }

@@ -22,10 +22,10 @@ services:
     container_name: site
     environment:
       TZ: ${TZ}
-      HOST: 0.0.0.0
+      # HOST: 0.0.0.0
       PORT: 3000
-      NUXT_OIDC_ISSUER: https://auth.plyglo.com/application/o/plyglo-api/
-      NUXT_REDIS_URL: redis://redis.internal.lan:6379
+      # NUXT_OIDC_ISSUER: https://auth.plyglo.com/application/o/plyglo-api/
+      # NUXT_REDIS_URL: redis://redis.internal.lan:6379
       # ... остальные env (session secret, encryption key)
     networks:
       - edge
@@ -51,30 +51,30 @@ services:
     pid: host
     restart: unless-stopped
 
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
-    ports:
-      - "10.10.1.10:8080:8080"   # только vmbr1, не наружу
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    networks:
-      - edge    # ← было internal
-    restart: unless-stopped
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor:latest
+  #   container_name: cadvisor
+  #   ports:
+  #     - "10.10.1.10:8080:8080"   # только vmbr1, не наружу
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:ro
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #   networks:
+  #     - edge    # ← было internal
+  #   restart: unless-stopped
 
-  promtail:
-    image: grafana/promtail:latest
-    container_name: promtail
-    volumes:
-      - ./agents/promtail-config.yml:/etc/promtail/config.yml:ro
-      - /var/log:/var/log:ro
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-    networks:
-      - edge
-    restart: unless-stopped
+  # promtail:
+  #   image: grafana/promtail:latest
+  #   container_name: promtail
+  #   volumes:
+  #     - ./agents/promtail-config.yml:/etc/promtail/config.yml:ro
+  #     - /var/log:/var/log:ro
+  #     - /var/lib/docker/containers:/var/lib/docker/containers:ro
+  #   networks:
+  #     - edge
+  #   restart: unless-stopped
 
 networks:
   edge:
